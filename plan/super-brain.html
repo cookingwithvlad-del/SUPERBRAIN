@@ -1,0 +1,168 @@
+<title>Chef Vlad's Super Brain</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a kitchen "pass" — one narrow reading column, stations as tickets, rail of status chips */
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --fg:#1d1f1c; --muted:#5d625a; --line:#dcddd5;
+  --accent:#b8860b; --accent-ink:#7a5806; --keep:#2f6b3a; --keep-bg:#e5f0e6; --fix:#8a5a00; --fix-bg:#f8edd6; --drop:#8f2f2f; --drop-bg:#f6e2e0; --fence:#3c5a80; --fence-bg:#e3eaf3;
+  --display:"Fraunces",Georgia,serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151714; --surface:#1d201c; --fg:#ecebe4; --muted:#a3a79c; --line:#33372f;
+  --accent:#e0b043; --accent-ink:#e8c46c; --keep:#8fd19b; --keep-bg:#1f3323; --fix:#f0c36a; --fix-bg:#3a2f17; --drop:#f0a19a; --drop-bg:#3d2220; --fence:#9dbbe3; --fence-bg:#1f2b3a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151714; --surface:#1d201c; --fg:#ecebe4; --muted:#a3a79c; --line:#33372f;
+  --accent:#e0b043; --accent-ink:#e8c46c; --keep:#8fd19b; --keep-bg:#1f3323; --fix:#f0c36a; --fix-bg:#3a2f17; --drop:#f0a19a; --drop-bg:#3d2220; --fence:#9dbbe3; --fence-bg:#1f2b3a; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:700}
+h2{font-size:1.6rem;font-weight:700;margin-top:56px;padding-top:20px;border-top:2px solid var(--fg)}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
+.lede{font-size:1.15rem;color:var(--muted);max-width:62ch;margin-top:14px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.section-intro{color:var(--muted);max-width:65ch;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+.ticket{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ticket .meta{font-family:var(--mono);font-size:.72rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.ticket ul{margin:0;padding-left:18px;color:var(--muted);font-size:.95rem}
+.rules{counter-reset:r;list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:12px}
+.rules li{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start}
+.rules li::before{counter-increment:r;content:counter(r);font-family:var(--display);font-size:1.6rem;font-weight:700;color:var(--accent);line-height:1}
+.brief{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:18px}
+.brief div{border-top:3px solid var(--accent);padding-top:8px}
+.brief b{font-family:var(--mono);font-size:.8rem;letter-spacing:.1em}
+.brief p{color:var(--muted);font-size:.93rem}
+.tablewrap{overflow-x:auto;margin-top:18px;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.95rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+.chip{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:3px;white-space:nowrap}
+.keep{background:var(--keep-bg);color:var(--keep)} .fix{background:var(--fix-bg);color:var(--fix)} .drop{background:var(--drop-bg);color:var(--drop)} .fence{background:var(--fence-bg);color:var(--fence)}
+.callout{background:var(--surface);border-left:4px solid var(--accent);padding:14px 18px;margin-top:18px;border-radius:0 6px 6px 0}
+code,.mono{font-family:var(--mono);font-size:.85em}
+pre{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;font-family:var(--mono);font-size:.82rem;line-height:1.5;margin:10px 0 0;overflow-x:auto}
+details{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 16px}
+summary{cursor:pointer;font-weight:600}
+summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.steps{padding-left:22px;margin:16px 0 0;display:flex;flex-direction:column;gap:8px}
+a{color:var(--accent-ink)}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Super brain · Plan · 25 Oct 2026</p>
+  <h1>Chef Vlad's Super Brain</h1>
+  <p class="lede">One system for everything you do with Claude: who you are, the rules you've learned the hard way, which station each project runs on, and the tools and skills each station gets. Built from your ChatGPT-year brief and your Claude memory export.</p>
+
+  <h2>How you think</h2>
+  <p class="section-intro">This is what Claude should assume about you on every project, before you type a word.</p>
+  <div class="grid">
+    <div class="ticket"><span class="meta">Who</span><h3>Chef first, creator second, founder always</h3><p>Hell's Kitchen S21 "Truffle Boy", GT Prime, Levy traveling chef, Bait Cafe. Trotter lineage: the ingredient decides the menu, vegetable-forward, excellence.</p></div>
+    <div class="ticket"><span class="meta">Taste</span><h3>Weissman pace, Bourdain soul</h3><p>Fast, punchy Joshua Weissman / Nick DiGiovanni cutting with Anthony Bourdain storytelling. Strangers become friends at the table.</p></div>
+    <div class="ticket"><span class="meta">Style of work</span><h3>Draft fast, check like a plate before service</h3><p>You iterate in batches (photos → recipes → corrections) and you own what goes out under your name.</p></div>
+  </div>
+
+  <h2>Your house rules</h2>
+  <p class="section-intro">Pulled straight from the corrections you made this year. Every skill below enforces these.</p>
+  <ol class="rules">
+    <li><p><b>Never invent facts about you.</b> The "former Alinea sous chef" ad is the reason. Credentials come only from your verified profile. No made-up metrics, views, income or endorsements.</p></li>
+    <li><p><b>Change only what you asked.</b> "Use these photos but don't change them except colors." Faces and likeness stay exactly as they are.</p></li>
+    <li><p><b>Deliver usable files.</b> Separate files, not zips. Right size, right format, stated up front.</p></li>
+    <li><p><b>Build on what worked.</b> "7 types of chefs, which one are you" had the best traction. Ask Claude for more of a proven format instead of "make it viral".</p></li>
+    <li><p><b>Respect the people at the table.</b> Some guests stay unnamed by choice (the rabbi, the hospice, WNRS makers, Ep 49's kitchen). Check before naming anyone.</p></li>
+  </ol>
+  <p class="section-intro" style="margin-top:20px">And the brief you'd save, the one that fixes most problems:</p>
+  <div class="brief">
+    <div><b>WHAT</b><p>What are we making? A 30s reel, a recipe page, a pitch slide.</p></div>
+    <div><b>WHO</b><p>Who is it for? Followers, investors, a private client.</p></div>
+    <div><b>KEEP TRUE</b><p>Facts, faces, names and details that can't change.</p></div>
+    <div><b>DELIVER</b><p>Format, size, length, separate files. Then check against the brief.</p></div>
+  </div>
+
+  <h2>Your stations</h2>
+  <p class="section-intro">Instead of one long scattered chat, give each line of work its own Claude project with its own instructions. Each ticket lists the tools and skills that station uses.</p>
+  <div class="grid">
+    <div class="ticket"><span class="meta">Station 1 · Daily</span><h3>Content Studio</h3><p>Reels from your footage, hooks, captions, carousels, YouTube growth, Chef on the House clips, the anime series.</p><ul><li>Skills: vlad-reel-producer, vlad-brief</li><li>Descript, OpusClip, Epidemic Sound, Canva, Higgsfield, Drive</li></ul></div>
+    <div class="ticket"><span class="meta">Station 2</span><h3>Cookbooks</h3><p>"Cooking for Strangers to Save the World" (Orly's story blocks and Part essays left) and "Camp Smith" (51 recipes, 8 chapters).</p><ul><li>Skills: vlad-recipe-writer, vlad-brief</li><li>Google Docs/Drive, Canva, Claude Docs</li></ul></div>
+    <div class="ticket"><span class="meta">Station 3</span><h3>Scallion / Onigiri Club</h3><p>DTLA onigiri + matcha shop: lean grab-and-go model, raise, binder, P&amp;L, equipment, furikake line.</p><ul><li>Skills: vlad-brief, xlsx, pdf, pptx</li><li>Drive, Gmail, Calendar, Notion</li></ul></div>
+    <div class="ticket"><span class="meta">Station 4</span><h3>Truffle Boy Co. &amp; Private Chef</h3><p>Catering menus, invoices, private-client work, brand system, chef-travel positioning.</p><ul><li>Skills: vlad-brief, docx/pdf</li><li>Gmail, Calendar, Canva</li></ul></div>
+    <div class="ticket"><span class="meta">Station 5</span><h3>Dirty Salt</h3><p>"Always Soigné" CPG seasoning, 70% salt / 30% Tellicherry. Labels, packaging, store.</p><ul><li>Skills: vlad-brief</li><li>Canva, Higgsfield, Shopify when the store is live</li></ul></div>
+    <div class="ticket"><span class="meta">Fenced off</span><h3>Personal</h3><p>Personal finance tools and research stay in their own project so they never leak into creative work.</p><ul><li>Finance connectors only</li></ul></div>
+  </div>
+  <div class="callout"><p><b>Set-up per station:</b> create a Claude project, paste the station's line into its instructions ("You are working with Chef Vlad on [station]. Follow the vlad-brief house rules."), and only turn on that station's connectors. Fewer tools per project means Claude picks the right one.</p></div>
+
+  <h2>Connector audit</h2>
+  <p class="section-intro">Your claude.ai connectors, checked today. "Fix" means it's installed but never finished signing in.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Connector</th><th>Call</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Descript</td><td><span class="chip keep">Keep</span></td><td>Your main editor for long footage: transcript editing, filler removal, captions, publish.</td></tr>
+      <tr><td>OpusClip</td><td><span class="chip keep">Keep</span></td><td>Long video → short clips, social copy, scheduling to your accounts.</td></tr>
+      <tr><td>AI Producer by OpusClip</td><td><span class="chip keep">Keep</span></td><td>Hands-off rough cuts and captions for single reels. Pick it or Descript per job, not both.</td></tr>
+      <tr><td>Epidemic Sound</td><td><span class="chip keep">Keep</span></td><td>Licensed music and SFX for reels.</td></tr>
+      <tr><td>Canva</td><td><span class="chip keep">Keep</span></td><td>Carousels, labels, menus, thumbnails, brand kit.</td></tr>
+      <tr><td>higgsfield (full)</td><td><span class="chip keep">Keep</span></td><td>Anime series, locked Vlad/Orly character sheets, image and video generation.</td></tr>
+      <tr><td>Higgsfield AI (viewer)</td><td><span class="chip drop">Drop</span></td><td>Duplicate. It can only browse and check credits; the full one does everything.</td></tr>
+      <tr><td>Google Drive, Docs, Gmail, Calendar</td><td><span class="chip keep">Keep</span></td><td>Where your files, cookbook drafts, client emails and shoots live.</td></tr>
+      <tr><td>Notion</td><td><span class="chip keep">Keep</span></td><td>Make it the home for project hubs and episode trackers. Drive holds media.</td></tr>
+      <tr><td>HyperFrames by HeyGen</td><td><span class="chip keep">Optional</span></td><td>Animated text and motion graphics for intros. Keep only if you use it this month.</td></tr>
+      <tr><td>Tella</td><td><span class="chip drop">Drop</span></td><td>Built for screen recordings and talking-head tutorials, which you don't make. Descript covers it.</td></tr>
+      <tr><td>Unblocked</td><td><span class="chip drop">Drop</span></td><td>A code-context tool for software teams.</td></tr>
+      <tr><td>Shopify</td><td><span class="chip fix">Fix later</span></td><td>Finish sign-in once Dirty Salt or the furikake line has a store.</td></tr>
+      <tr><td>Riverside</td><td><span class="chip fix">Fix or drop</span></td><td>Worth finishing only if you record Chef on the House interviews or a podcast in Riverside.</td></tr>
+      <tr><td>Amazon Selling Partner</td><td><span class="chip drop">Drop for now</span></td><td>Only useful once Dirty Salt sells on Amazon.</td></tr>
+      <tr><td>Moda</td><td><span class="chip drop">Drop</span></td><td>Never connected, and Canva already does slides and social.</td></tr>
+      <tr><td>Finance connectors</td><td><span class="chip fence">Fence</span></td><td>Keep, but only in the Personal project.</td></tr>
+      <tr><td>Stocktwits</td><td><span class="chip drop">Drop</span></td><td>Never connected; the other three cover it.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Why so many things "fail to connect"</h2>
+  <p class="section-intro">The long list of red errors comes from the plugin bundles loaded in your Claude Code cloud sessions (Marketing, Small Business, Engineering, Finance, Data and more). Each bundle ships its own connectors, like HubSpot, PagerDuty, Datadog and Honeycomb. The cloud session's network blocks those hosts, so they error. Your real accounts are fine. Most of them are tools you'll never use, so the fix is to remove the bundles, not to connect them.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Plugin bundle</th><th>Call</th><th>What's useful in it</th></tr></thead>
+    <tbody>
+      <tr><td>Marketing</td><td><span class="chip keep">Keep</span></td><td>content-creation, campaign-plan, brand-review, competitive-brief.</td></tr>
+      <tr><td>Small Business</td><td><span class="chip keep">Keep</span></td><td>social-content-engine, content-strategy, proposal-builder (catering), invoice-chase, restock and inventory-planner (Scallion).</td></tr>
+      <tr><td>Canva skills</td><td><span class="chip keep">Keep</span></td><td>resize-for-social-media, bulk-create, brand-check.</td></tr>
+      <tr><td>Postiz</td><td><span class="chip keep">Keep</span></td><td>Social post scheduling.</td></tr>
+      <tr><td>FFmpeg</td><td><span class="chip keep">Keep</span></td><td>Batch video conversions for your "claude video editor" in Claude Code.</td></tr>
+      <tr><td>Desktop Commander</td><td><span class="chip keep">Keep</span></td><td>Lets Claude work in folders on your computer, where your footage is.</td></tr>
+      <tr><td>Productivity</td><td><span class="chip fix">Optional</span></td><td>Task tracking. Overlaps Notion.</td></tr>
+      <tr><td>Design, Figma</td><td><span class="chip fix">Optional</span></td><td>Only if you design in Figma.</td></tr>
+      <tr><td>Engineering, Honeycomb, Sanity, Data</td><td><span class="chip drop">Drop</span></td><td>Software and analytics tooling. Source of most of the errors.</td></tr>
+      <tr><td>Finance (SOX, journal entries)</td><td><span class="chip drop">Drop</span></td><td>Corporate accounting. Use xlsx for your P&amp;L.</td></tr>
+      <tr><td>Bitcoin companies, Stock valuation (CN), Alexandria</td><td><span class="chip drop">Drop</span></td><td>Off-topic for your work.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout"><p>If you do want a blocked plugin connector to work in cloud sessions, open Project settings → Cloud environment → Add cloud environment and add its host under Allowed domains. Steps: <a href="https://code.claude.com/docs/en/cloud-environments#network-access">cloud environment network access</a>.</p></div>
+
+  <h2>Your skills</h2>
+  <p class="section-intro">Keep the built-ins you already use (docs, pdf, xlsx, pptx, docx, deep-research, skill-creator, import-memory). Add three personal skills that encode how you work. They're waiting for you to save in the chat.</p>
+  <div class="grid">
+    <div class="ticket"><span class="meta">New · every project</span><h3>vlad-brief</h3><p>Turns any request into WHAT / WHO / KEEP TRUE / DELIVER, carries your verified facts and voice, and checks the output before you see it.</p></div>
+    <div class="ticket"><span class="meta">New · Content Studio</span><h3>vlad-reel-producer</h3><p>Footage → hook-first 9:16 reel with your editing style, music, captions, SRT, and per-platform captions. Picks Descript or OpusClip for the job.</p></div>
+    <div class="ticket"><span class="meta">New · Cookbooks</span><h3>vlad-recipe-writer</h3><p>Photos or episode notes → recipe pages in grams with a warm "Why this menu" in your voice, flagging every guess for you to correct.</p></div>
+  </div>
+
+  <h2>Next steps</h2>
+  <ol class="steps">
+    <li>Save the three skills from the card in the chat.</li>
+    <li>Remove Tella, Unblocked, Moda, Stocktwits and the duplicate Higgsfield AI connector in claude.ai Settings → Connectors.</li>
+    <li>Uninstall the Engineering, Honeycomb, Sanity, Data, Finance, Bitcoin, Stock valuation and Alexandria plugins.</li>
+    <li>Create one Claude project per station and paste its instruction line.</li>
+    <li>Answer the open questions below so the stations stay accurate.</li>
+  </ol>
+
+  <h2>Open questions for you</h2>
+  <div class="stack" style="margin-top:16px">
+    <details open><summary>Is the shop "Scallion" now, or still "Onigiri Club"?</summary><p class="section-intro">Your notes switched to Scallion in September. I'll use whichever you confirm in every pitch and label.</p></details>
+    <details><summary>Is Dirty Salt selling yet, and where?</summary><p class="section-intro">Decides whether to finish Shopify or Amazon.</p></details>
+    <details><summary>Do you record in Riverside?</summary><p class="section-intro">If not, drop it.</p></details>
+  </div>
+</div>
